@@ -4,6 +4,8 @@
 
 **Windows 10/11 · 무료 · 설치 없음 · 한국어**
 
+다운로드 : https://github.com/perypury-sudo/tarkov_pal/releases/download/1.0.0.0/TarkovPal_pak.zip
+
 > 게임 메모리를 읽거나 게임에 코드를 넣지 않습니다. 게임이 스스로 남기는 **스크린샷 파일 이름**(좌표가 적혀 있음)과 **로그 파일**, 그리고 설치된 **게임 파일**(3D 지도를 만들 때)만 읽습니다.
 
 ![메인 화면 — 내 위치 · 파티원 · 핑 · 퀘스트 번호 · 탈출구 · 위험 구역](screenshots/01_map_customs.png)
