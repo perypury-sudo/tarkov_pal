@@ -239,7 +239,6 @@ python -m unittest discover -s tests
 
 - 지도 타일 · 퀘스트 · 보스 · 스폰 · 열쇠 · 가격 · 교환 · 제작 · 상인 재입고: [tarkov.dev](https://tarkov.dev) (the-hideout)
 - 도면 지도: Shebuka, [tarkov-dev-svg-maps](https://github.com/the-hideout/tarkov-dev-svg-maps) (CC BY-NC-SA 4.0)
-- 한글 이름 · 퀘스트 조건 · 은신처 자료: SPT 로케일
 - 퀘스트 진행 연동: [TarkovTracker](https://tarkovtracker.org)
 - 배틀패스 문서 자리: Perofunyang [battlepass_interactive_map](https://github.com/Perofunyang/battlepass_interactive_map) (CC BY-NC 4.0)
 - 정밀 지도 · 3D · 위험 구역 · 길 안내: 사용자 PC 에 설치된 게임 파일을 그 자리에서 읽습니다(배포 파일에 게임 파일은 들어 있지 않습니다).
