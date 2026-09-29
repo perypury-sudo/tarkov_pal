@@ -2,16 +2,65 @@
 
 타르코프(Escape from Tarkov) 레이드 도우미입니다. 레이드 중 **PrintScreen 한 번이면 지도에 내 위치가 찍히고**, 게임 위에 **미니맵**이 뜨고, **내 PC 에 깔린 게임 파일로 직접 그린 지도**(정밀 지도 · 3D)로 가 보지 않은 길을 미리 둘러볼 수 있습니다. 지뢰밭 · 저격수 구역 · 크레모아, 길 안내, 게임 화면 위 핑, 퀘스트 · 가격 · 교환 · 은신처 · 파티 위치 공유 · 각종 타이머까지 한 프로그램에 들어 있습니다.
 
-**Windows 10/11 · 무료 · 설치 없음 · 한국어**
+**Windows 10/11 · 무료 · 설치 없음 · 한국어 · PVE 전용 · 서명된 배포본**
 
 > 게임 메모리를 읽거나 게임에 코드를 넣지 않습니다. 게임이 스스로 남기는 **스크린샷 파일 이름**(좌표가 적혀 있음)과 **로그 파일**, 그리고 설치된 **게임 파일**(지도 · 3D 를 그릴 때)만 읽습니다.
 
 ![메인 화면 — 게임 파일로 그린 정밀 지도 위에 내 위치 · 파티원 · 핑 · 퀘스트 번호 · 탈출구](screenshots/01_map_customs.png)
 
-## 무엇이 새로워졌나 (2026-09-28)
+## 보안과 안전 — 먼저 읽어 주세요
 
+이번 판은 **보안**에 특히 공을 들였습니다. 무엇을 읽고 안 읽는지, 받은 파일이 진짜 공식본인지, 왜 PVE 에서만 켜지는지, 그리고 **무엇까지는 보장하고 무엇은 못 하는지**를 숨김없이 적었습니다.
+
+### 1. 게임을 건드리지 않습니다 (안티치트 관점)
+
+- **게임 메모리를 읽지 않고, 게임에 아무것도 끼워 넣지(인젝션) 않습니다.** 읽는 것은 ① 스크린샷 **파일 이름**(게임이 좌표를 적어 둠) ② **로그 파일** ③ 게임 **설정 파일** ④ 설치된 **게임 파일**(지도 · 3D 를 그릴 때)뿐입니다.
+- 게임 화면 위 핑은 **게임이 맨 앞일 때만** 윈도우 원시 입력(Raw Input)으로 마우스 움직임을 **읽기만** 합니다. 게임으로는 아무것도 보내지 않습니다.
+- 게임에 키 입력을 보내는 기능은 `자동 촬영`(스크린샷 키를 대신 눌러 줌) **하나뿐**이고, **기본으로 꺼져 있으며** 위험 안내에 동의해야 켜집니다. PrintScreen 을 직접 누르면 이 기능도 안 씁니다.
+- 인터넷은 자료 · 가격 · 재입고 시각 · 서버 상태 받기와 파티 연결에만 씁니다. **계정 정보나 스크린샷 자체는 어디에도 보내지 않습니다.**
+
+### 2. PVE 전용 — PVP 에서는 잠깁니다
+
+- 게임이 남기는 로그(모드 줄 · 접속한 서버 · 로비)로 **PVE 로 확인될 때만** 기능이 켜집니다. PVP 이거나 아직 확인되지 않으면 모든 기능을 잠급니다.
+- 게임에서 PVE 를 고르면 몇 초 안에 저절로 풀립니다. 잠금을 끄는 설정은 없습니다.
+
+### 3. 서명된 배포본 · 자기 검증
+
+- 공식 배포본은 프로그램 파일 목록에 **작성자의 RSA 서명**이 붙어 있습니다.
+- 실행기(exe)가 **파이썬을 켜기 전에** 그 서명과 프로그램 파일 전체를 확인합니다. 검증 대상 파일이 바뀌거나 빠졌거나, 불러올 수 있는 코드가 끼어들면 **실행을 막습니다.** 실행 중에도 주기적으로 다시 검사합니다.
+- 보안 · 잠금에 관계된 핵심 코드는 **네이티브(기계어)로 컴파일**해 두어 읽고 고치기 어렵습니다.
+
+### 4. 받은 파일이 공식본인지 스스로 확인하기 (SHA-256)
+
+받은 파일이 아래 지문과 같으면 **공식 배포본 그대로**입니다.
+
+```
+3E83273EBD1621F63F2C342181CF75D867C597303A189A6C45F78DAB8F2F45FC *TarkovPal_pak.zip
+726E75907D3BDEB2F3DFB07F42B9C0784C110C6D4AEEA5978B673B31F3F2E46F *TarkovPal/TarkovPal_SHA256.txt
+```
+
+- **받은 zip**: 그 폴더에서 PowerShell 을 열고 `Get-FileHash .\TarkovPal_pak.zip` → 첫 번째 값과 같아야 합니다.
+- **푼 폴더**: `TarkovPal` 폴더에서 `Get-FileHash .\TarkovPal_SHA256.txt` → 두 번째 값(프로그램 지문)과 같아야 합니다. 이 파일은 exe 와 `_internal` 안 모든 파일의 지문 목록이고, 폴더 안 `README.txt` 의 PowerShell 세 줄을 붙여 넣으면 목록과 다른 파일 · 목록에 없는 파일을 알려 줍니다(아무것도 안 나오면 그대로).
+
+### 5. 손상되면 복구
+
+- 설정 또는 잠금 화면의 `무결성 검사`에서 검사하고 복구를 예약할 수 있습니다. 종료 후 다시 켜면 같은 빌드의 `TarkovPal_repair.dat` 를 서명과 해시로 검증한 뒤 복구합니다. **설정 · 진행도는 보존**하고 기존 프로그램 파일은 `_recovery_...` 폴더에 보관합니다.
+- 복구 쓰기 권한이 부족하면 앱을 닫고 같은 폴더의 `TarkovPal_repair.cmd` 를 실행한 뒤 Windows UAC 요청을 승인하세요. 복구만 수행하고 끝나므로, 끝나면 평소처럼 앱을 실행하면 됩니다. 폴더 권한 · UAC 설정을 영구히 바꾸지 않습니다.
+- 복구 원본이나 실행기 자체가 손상되었으면 공식 zip 을 **새 폴더**에 풀어 주세요.
+
+### 6. 정직한 한계 (과장하지 않겠습니다)
+
+- 위 보호는 **정상 실행기의 검증을 전제로 한 것**입니다. 실행기와 검증 코드까지 뜯어고친 **비공식 프로그램의 실행을 완전히 막을 수는 없습니다.** 다만 그런 판은 위 지문과 반드시 달라지므로, 지문만 맞춰 보면 공식본이 아님을 누구나 알 수 있습니다.
+- 여기 쓰는 **RSA 배포 서명은 Windows 게시자 서명(Authenticode)과 다릅니다.** 현재 배포본에는 Authenticode 서명이 없어, 처음 실행 시 "Windows의 PC 보호" 창이 뜰 수 있습니다(`추가 정보` → `실행`).
+- 백신(디펜더)이 잡으면 실행을 멈추고 위 지문과 탐지 내용을 확인하세요. **배포 전 검사가 정상이었더라도 이후 탐지를 무조건 오탐이라고 단정하지는 않습니다.** 오탐이 의심되면 [Microsoft 에 분석 요청](https://www.microsoft.com/en-us/wdsi/filesubmission)을 할 수 있고, 보호 기능을 끄거나 예외를 등록할 필요는 없습니다.
+- 서드파티 도구라 **사용에 따른 책임은 사용자에게 있습니다.** 처음 켤 때 위험 안내가 나오고, 동의해야 씁니다.
+
+## 무엇이 새로워졌나 (2026-09-29)
+
+- **보안 강화** — 서명된 배포본 + 실행기 선(先)검증 + 자기 검증 · 복구, 보안 핵심 코드 네이티브 컴파일, SHA-256 공식 지문 공개(위 "보안과 안전" 참고).
 - **정밀 지도 = 게임 파일로 직접 그린 지도** — 13개 맵의 모든 층. tarkov.dev 에 없던 스트리트 · 라이트하우스 · 터미널 정밀 지도도 이제 나옵니다.
-- **처음 준비 창** — 처음 켤 때 지도 · 3D · 길 안내 · 위험 구역을 만들며 진행 막대와 지금 만드는 맵 · 층을 실시간으로 보여 줍니다.
+- **처음 준비 창** — 처음 켤 때 지도 · 3D · 길 안내 · 건물별 층 높이 · 위험 구역을 만들며 진행 막대와 지금 만드는 맵 · 층을 실시간으로 보여 줍니다.
+- **층 자동 판정을 건물마다** — 건물마다 다른 층 높이를 게임 파일에서 재서, 2층 · 3층 · 지하 · 쇄빙선 갑판까지 서 있는 층이 뜹니다(tarkov.dev 층 높이는 스트리트 · 쇄빙선에서 한두 층씩 어긋났음).
 - **지뢰밭 · 저격수 구역 · 크레모아를 게임 씬에서 그대로** — 네모가 아니라 실제 모양, 갈 수 없는 경계 밖은 잘라서. 라이트하우스 크레모아 91개.
 - **배틀패스 문서 자리 375곳(12맵, 쇄빙선 포함)** 을 게임 지도에 다시 맞춤.
 - **길 안내**(게임 AI 가 걷는 길) · **게임 화면 위 핑** · **스마트 핑** · **3D 게임 조명 · 밤** · **PVE 로그**(보스 스폰 시도 · 보급품) · **교환 · 제작** · **기록 탭**(보험 · 레이드 기록 · 서버 상태) · **F1 로 게임 위에 띄우기**.
@@ -19,15 +68,16 @@
 ## 받기
 
 1. [최신 버전 받기 (Releases)](../../releases/latest) 에서 `TarkovPal_pak.zip` 을 받습니다.
+   - 받은 뒤 위 "보안과 안전 4" 의 지문으로 공식본인지 확인하길 권합니다.
 2. 압축을 풀면 `TarkovPal` 폴더 하나가 나옵니다. 안의 `TarkovPal.exe` 를 실행하세요.
    - exe 만 따로 꺼내면 켜지지 않습니다. **폴더째로** 두세요.
-   - 처음 켤 때 "Windows의 PC 보호" 창이 뜨면 `추가 정보` → `실행` 을 누르세요.
-3. 처음 켜면 **사용 위험 안내**에 동의한 뒤 **처음 준비 창**이 떠서 13개 맵의 지도 · 3D 를 이 PC 의 게임 파일로 만듭니다(PC 에 따라 10~20분, 한 번만). 다 되면 프로그램이 켜지고, 다음부터는 바로 켜집니다. 도중에 닫아도 다음에 이어서 합니다.
-4. 지도 · 퀘스트 · 가격 자료가 들어 있어 **인터넷이 없어도** 열립니다. 설정과 진행도는 폴더 안 `TarkovPal_자료` 에 저장되니 폴더째 옮기면 다른 PC 에서도 이어서 씁니다.
+   - 처음 켤 때 "Windows의 PC 보호" 창이 뜨면 `추가 정보` → `실행` 을 누르세요(Authenticode 서명이 없어 뜨는 것 — 위 "보안과 안전 6" 참고).
+3. 처음 켜면 **사용 위험 안내**에 동의한 뒤 **처음 준비 창**이 떠서 13개 맵의 지도 · 3D 를 이 PC 의 게임 파일로 만듭니다(여러 맵을 동시에 만들어 PC 에 따라 3~10분, 한 번만 — 8코어 PC 에서 약 3분). 다 되면 프로그램이 켜지고, 다음부터는 바로 켜집니다. 도중에 닫아도 다음에 이어서 합니다.
+4. 지도 · 퀘스트 · 가격 자료가 들어 있어 **인터넷이 없어도** 열립니다. 설정과 진행도는 폴더 안 `TarkovPal_data` 에 저장되니 폴더째 옮기면 다른 PC 에서도 이어서 씁니다. 예전 판을 쓰던 분은 새 판을 같은 자리에 덮어 풀면 설정 · 진행도가 그대로 이어집니다(예전 자료 폴더는 켤 때 알아서 옮겨 담음).
 
-게임 폴더(로그 · 스크린샷 · 게임 파일)는 알아서 찾습니다. 못 찾을 때만 설정에서 직접 고르면 됩니다. 게임이 없는 PC 에서는 준비 창 없이 바로 켜지고 tarkov.dev 지도를 씁니다.
+게임 폴더(게임 설치 폴더 · 로그 · 스크린샷)는 알아서 찾습니다. 못 찾은 것이 있으면 처음 켤 때 **게임 폴더 확인 창**이 떠서 `찾아보기…` 로 직접 고를 수 있고, 고른 자리는 기억합니다(나중에 설정 › 게임 폴더에서도 바꿀 수 있음). 게임이 없는 PC 에서는 준비 창 없이 바로 켜지고 tarkov.dev 지도를 씁니다.
 
-![처음 준비 — 맵마다 할 일 · 지금 만드는 맵과 층 · 걸린 시간 · 남은 시간](screenshots/26_firstrun.png)
+![처음 준비 — 여러 맵을 동시에 · 맵마다 단계와 몫 · 걸린 시간 · 남은 시간](screenshots/26_firstrun.png)
 
 ## 할 수 있는 것
 
@@ -35,7 +85,7 @@
 
 - 레이드 중 `PrintScreen` 을 누르면 그 자리가 지도에 점과 **바라보는 방향** 화살표로 찍힙니다. 찍힌 PNG 는 좌표를 읽은 뒤 바로 지웁니다(끌 수 있음).
 - **13개 맵 전부**: 커스텀 · 팩토리 · 우즈 · 쇼어라인 · 인터체인지 · 리저브 · 더 랩 · 라이트하우스 · 스트리트 · 그라운드 제로 · 래버린스 · 터미널 · 아이스브레이커.
-- **층 자동 전환** — 내 높이를 보고 그 층 지도로 바뀝니다(리저브 지하, 랩, 아이스브레이커 갑판 등).
+- **층 자동 전환** — 건물마다 층 바닥 높이를 게임 파일에서 재 두고, 내 높이로 그 층 지도로 바뀝니다(2층 · 3층 · 지하 · 랩 · 아이스브레이커 갑판 등). 층을 손으로 골라 봐도 다음 스크린샷에서 다시 자동으로.
 - 어느 맵을 불러왔는지, PMC 인지 스캐브인지 로그로 알아서 잡습니다. 맵을 고를 필요가 없습니다.
 - 지도는 **정밀**(게임 파일로 그린 지도) · **간단**(평면도) · **입체**(3D) 세 가지.
 
@@ -46,7 +96,7 @@
 **13개 맵의 모든 층**을 이 PC 의 게임 파일로 만든 3D 를 곧장 위에서 내려다보고 그립니다. 게임 속 물건 · 건물 · 지형이 제자리에 그대로 있습니다.
 
 - tarkov.dev 에 위성 지도가 없거나 오래된 맵(스트리트 · 라이트하우스 · 터미널 · 인터체인지 · 쇼어라인 윗층)도 진짜 정밀 지도로 나옵니다.
-- 윗층 · 지하층은 그 층 바닥 높이를 재어 **천장을 걷어 낸 평면**으로, 연구소 · 공장 · 래버린스 · 쇄빙선은 층마다 잘라 그립니다.
+- 윗층 · 지하층은 건물마다 그 층 바닥 높이를 재어 **천장을 걷어 낸 평면**으로, 연구소 · 공장 · 래버린스 · 쇄빙선은 층마다 잘라 그립니다. 윗층 · 지하를 볼 때는 기본층을 어둡게 밑에 깔아 어디인지 알 수 있습니다.
 - tarkov.dev 위성 지도가 있는 커스텀을 같은 방식으로 그려 겹쳐 보면 어긋남 0화소 — 내 위치 · 핑 · 탈출구가 그대로 맞습니다.
 - **간단 지도**: 한눈에 보기 쉬운 평면도(게임 AI 가 걷는 바닥 + 건물). 게임이 업데이트되어 씬이 바뀐 맵만 다시 그립니다.
 
@@ -90,7 +140,7 @@
 - 지도에서 `Alt + 클릭` 핑, `휠 클릭` 경로 점. 파티 전체에 실시간 공유.
 - **스마트 핑**: 핑 키(기본 숫자패드 9)를 누르고 스크린샷을 찍으면 **화면 정가운데 시선이 처음 닿는 곳**에 핑이 놓입니다. 문 · 컨테이너 · 탈출구 · 퀘스트 지점이면 무엇인지 글이 붙습니다. 종류별 핑(적 · 소리 · 아이템 · 위험 · 이동).
 - **게임 화면 위 핑**: 찍은 핑(파티원 것 포함)이 게임 화면 속 **그 자리에** 거리와 함께 떠 있고, 고개를 돌리면 따라 움직입니다. 시야 밖 · 조준 중 · 인벤토리나 메뉴가 열렸을 때는 숨고, 화면 한가운데 근처는 얇은 고리만 그려 적을 가리지 않습니다. 켜고 끌 수 있습니다.
-  - 스크린샷을 찍을 때마다 정확히 맞추고 그 사이는 마우스 움직임으로 따라갑니다. 감도 · 해상도 · 시야각은 게임 설정 파일과 스크린샷으로 알아서 맞춥니다.
+  - 스크린샷을 찍을 때마다 정확히 맞추고 그 사이는 마우스 움직임으로 따라갑니다. 감도 · 해상도 · 시야각은 게임 설정 파일에서 읽어 처음부터 따라가고, 스크린샷이 쌓이면 이 PC 에 맞게 더 정확해집니다.
 
 ### 게임 위 미니맵
 
@@ -190,7 +240,7 @@ PVE 는 봇 · 보스 · 보급품을 내 PC 가 돌리므로 게임 로그에 �
 
 ### 입체 미리 만들기
 
-처음 준비 창이 만든 것을 **설정 → 입체 미리 만들기** 에서 다시 만들거나, 게임 업데이트 뒤 바뀐 맵만 채울 수 있습니다. 뒤에서 가장 낮은 우선순위로 만들고 **레이드 중에는 쉬었다가** 끝나면 이어서 합니다.
+처음 준비 창이 만든 것을 **설정 → 입체 미리 만들기** 에서 다시 만들거나, 게임 업데이트 뒤 바뀐 맵만 채울 수 있습니다. 여러 맵을 동시에, 뒤에서 가장 낮은 우선순위로 만들고 **레이드 중에는 쉬었다가** 끝나면 이어서 합니다.
 
 ![입체 미리 만들기](screenshots/15_prebuild.png)
 
@@ -201,44 +251,17 @@ PVE 는 봇 · 보스 · 보급품을 내 PC 가 돌리므로 게임 로그에 �
 - **게임에 양보**: 이 창이 앞에 없으면 CPU 우선순위와 전력 사용을 낮춥니다.
 - `자료 업데이트` 한 번으로 지도 · 퀘스트 · 가격 등 자료를 새로 받습니다.
 
-## 안전에 대해
-
-- 게임 메모리를 읽지 않고, 게임에 아무것도 끼워 넣지 않습니다. 읽는 것은 스크린샷 파일 이름 · 로그 · 게임 설정 파일 · 설치된 게임 파일(지도 · 3D)뿐입니다.
-- 게임 화면 위 핑은 **게임이 맨 앞일 때만** 윈도우의 원시 입력(Raw Input)으로 마우스 움직임을 읽습니다. 게임으로 아무것도 보내지 않습니다.
-- 게임에 키 입력을 보내는 기능은 `자동 촬영`(스크린샷 키를 대신 누름) 하나뿐이고, **기본으로 꺼져 있으며** 위험 안내에 동의해야만 켜집니다. PrintScreen 을 직접 누르면 아무 위험이 없습니다.
-- 인터넷은 자료 · 가격 · 재입고 시각 · 서버 상태 받기와 파티 연결에만 씁니다. 계정 정보나 스크린샷 자체는 어디에도 보내지 않습니다.
-- 처음 켤 때 서드파티 도구 사용 위험 안내가 나오고, 동의해야 쓸 수 있습니다.
-
-## 윈도우 디펜더가 막는다면
-
-파이썬으로 만든 프로그램은 가끔 백신이 기계 학습 추정(`...!ml`)으로 잘못 잡습니다. 이 프로그램은 오탐을 줄이려고 PyInstaller 대신 **자체 실행기 + 폴더판**으로 배포하고, 두 번째 프로세스를 띄우지 않도록 만들었습니다. 배포 파일은 올리기 전에 디펜더로 검사해 위협 없음을 확인합니다. 그래도 잡힌다면 오탐이니 [Microsoft 에 오탐 신고](https://www.microsoft.com/en-us/wdsi/filesubmission)를 해 주시거나, 아래처럼 소스에서 직접 빌드해서 쓰셔도 됩니다.
-
 ## 사양
 
-- Windows 10/11 64비트. 압축 65 MB, 풀면 약 97 MB.
-- **처음 준비를 마치면 `TarkovPal_자료` 가 약 7 GB 로 늘어납니다**(13개 맵의 3D · 정밀 지도 캐시). 여유 공간을 확인하세요.
+- Windows 10/11 64비트. 압축 88.5 MiB, 풀면 약 143.3 MiB.
+- **처음 준비를 마치면 `TarkovPal_data` 가 약 7 GB 로 늘어납니다**(13개 맵의 3D · 정밀 지도 캐시). 여유 공간을 확인하세요.
 - 정밀 지도 · 3D · 위험 구역 · 길 안내는 게임이 깔린 PC 에서 만들어집니다. 그래픽 카드가 셰이더를 못 쓰면 tarkov.dev 지도로 대신합니다. 게임이 없는 PC 에서도 2D 지도 · 퀘스트 · 가격 등은 모두 됩니다.
-
-## 직접 빌드하기
-
-Python 3.14 로 만들었고, 프로그램 자체는 표준 라이브러리(tkinter · ctypes · OpenGL · GDI+ 직접 호출)만 씁니다.
-
-```bash
-python build.py
-```
-
-`dist/TarkovPal/`(폴더판)과 `dist/TarkovPal_pak.zip` 이 만들어집니다. 소스에서 바로 켜려면 `python tarkov_pal.py`.
-
-시험:
-
-```bash
-python -m unittest discover -s tests
-```
 
 ## 자료 출처 · 고마운 프로젝트
 
 - 지도 타일 · 퀘스트 · 보스 · 스폰 · 열쇠 · 가격 · 교환 · 제작 · 상인 재입고: [tarkov.dev](https://tarkov.dev) (the-hideout)
 - 도면 지도: Shebuka, [tarkov-dev-svg-maps](https://github.com/the-hideout/tarkov-dev-svg-maps) (CC BY-NC-SA 4.0)
+- 한글 이름 · 퀘스트 조건 · 은신처 자료: SPT 로케일
 - 퀘스트 진행 연동: [TarkovTracker](https://tarkovtracker.org)
 - 배틀패스 문서 자리: Perofunyang [battlepass_interactive_map](https://github.com/Perofunyang/battlepass_interactive_map) (CC BY-NC 4.0)
 - 정밀 지도 · 3D · 위험 구역 · 길 안내: 사용자 PC 에 설치된 게임 파일을 그 자리에서 읽습니다(배포 파일에 게임 파일은 들어 있지 않습니다).
@@ -250,7 +273,7 @@ python -m unittest discover -s tests
   [hymccord/ReadySetTarkov](https://github.com/hymccord/ReadySetTarkov),
   [Re5pawnn/Tarkov_ToolBox](https://github.com/Re5pawnn/Tarkov_ToolBox)
 
-지도 그림과 문서 자리 자료가 비영리(CC BY-NC) 조건이라 이 프로그램도 **무료로만** 배포합니다.
+지도 그림과 문서 자리 자료가 비영리(CC BY-NC) 조건이라 이 프로그램도 **무료로만** 배포합니다. 소스는 공개하지 않습니다(PVE 전용 규칙을 지키기 위해). 프로그램을 고치거나, 고친 판을 나눠 주거나, 공식 배포본처럼 올리는 것은 허락하지 않습니다.
 
 ## 알림
 
@@ -260,4 +283,4 @@ Escape from Tarkov 는 Battlestate Games Limited 의 상표입니다. 이 프로
 
 ### English summary
 
-Tarkov Pal is a free, Korean-language companion app for Escape from Tarkov on Windows. Press PrintScreen in raid and your position (with facing) appears on the map — it only reads the coordinates the game writes into screenshot file names, the game's own log files and your installed game files; no memory reading, no injection. On first launch it builds, from your installed game files, a top-down precise map for every floor of all 13 maps, a 3D map with game textures and game lighting, navmesh-based route guidance, and hazard zones (minefields, sniper zones, claymores) read straight from the game scenes and clipped to the playable area. It also offers an in-game overlay minimap, pings shown on top of the game view, 375 battle-pass document spots, quest tracking from game logs, PVE boss-spawn and airdrop info, flea/trader prices, ammo charts, barters and crafts, hideout planning, insurance / raid history / server status, party position sharing, scav cooldown / runthrough / trader restock timers, and two-sighting triangulation for airdrops.
+Tarkov Pal is a free, Korean-language, **PVE-only** companion app for Escape from Tarkov on Windows. Press PrintScreen in raid and your position (with facing) appears on the map — it only reads the coordinates the game writes into screenshot file names, the game's own log files and your installed game files; **no memory reading, no injection.** Builds are **signed**: the launcher verifies the author's RSA signature and every program file before Python starts, re-checks periodically, and can self-repair; published SHA-256 fingerprints let you confirm you have the official build (this does not stop a fully-modified unofficial build from running, but such a build will not match the fingerprints; the RSA distribution signature is separate from Windows Authenticode, which this build does not carry). On first launch it builds, from your installed game files, a top-down precise map for every floor of all 13 maps, a 3D map with game textures and lighting, navmesh-based route guidance, and hazard zones (minefields, sniper zones, claymores) read from the game scenes and clipped to the playable area. It also offers an overlay minimap, in-view pings, 375 battle-pass document spots, quest tracking from logs, PVE boss-spawn and airdrop info, flea/trader prices, ammo charts, barters and crafts, hideout planning, insurance / raid history / server status, party position sharing, timers, and two-sighting triangulation.
